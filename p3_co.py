@@ -1,0 +1,20 @@
+from z3 import *
+
+x = Real("x")
+p = Int("p")
+q = Int("q")
+y = Real("y")
+m = Int("m")
+n = Int("n")
+s = Solver()
+
+g = Goal()
+g.add(q * x == p)
+g.add(n * y == m)
+g.add(ForAll([x], Exists([y], And(2 * y > 3 * x, 4 * y < (8 * x + 10)))))
+t = Tactic("qe")
+print(t(g))
+# s.add(q * x == p)
+# s.add(n * y == m)
+# s.add(Not(ForAll([x], Exists([y], And(2 * y > 3 * x, 4 * y < (8 * x + 10))))))
+# print(s.check())

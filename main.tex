@@ -420,23 +420,25 @@ z5 = Real("z5")
 
 s = Solver()
 s.add(
-	And(
-		Exists([z], And(la < z, z < ua, lb < z, z < ub)),
-		Exists([z1], And(la < z1, z1 < ua, lc < z1, z1 < uc)),
-		Exists([z2], And(ld < z2, z2 < ud, lb < z2, z2 < ub)),
-		Exists([z3], And(ld < z3, z3 < ud, lc < z3, z3 < uc)),
-		Not(Exists([z4], And(la < z4, z4 < ua, ld < z4, z4 < ud))),
-		Not(Exists([z5], And(lb < z5, z5 < ub, lc < z5, z5 < uc))),
+	Not(
+		And(
+			Exists([z], And(la < z, z < ua, lb < z, z < ub)),
+			Exists([z1], And(la < z1, z1 < ua, lc < z1, z1 < uc)),
+			Exists([z2], And(ld < z2, z2 < ud, lb < z2, z2 < ub)),
+			Exists([z3], And(ld < z3, z3 < ud, lc < z3, z3 < uc)),
+			Not(Exists([z4], And(la < z4, z4 < ua, ld < z4, z4 < ud))),
+			Not(Exists([z5], And(lb < z5, z5 < ub, lc < z5, z5 < uc))),
+		)
 	)
 )
 print(s.check())
 	\end{python}
 	The output of the above code is:
 	\begin{python}
-unsat
+sat
 	\end{python}
-	Thus, the given graph is an not an interval graph. \\
-	
+	The negation of the given formula is satisfiable. Hence, the given formula is not valid. \\
+
     {\rule{17cm}{0.4pt}}
 	\question[]
 	\solutiontitle
@@ -494,60 +496,86 @@ unsat
 		= \forall x. ((\frac{10}{8} > \frac{3}{2}x - \frac{6}{8}x - \frac{8}{8}x) \land (\frac{10}{8} < \frac{8}{4}x + \frac{10}{4} - \frac{6}{8}x - \frac{8}{8}x)) \\
 		= \forall x. ((\frac{10}{8} > \frac{12}{8}x - \frac{6}{8}x - \frac{8}{8}x) \land (\frac{10}{8} < \frac{16}{8}x - \frac{6}{8}x - \frac{8}{8}x)) + \frac{10}{4} \\  
 		= \forall x. ((\frac{10}{8} > \frac{-2}{8}x) \land (\frac{10}{8} - \frac{10}{4} < \frac{2}{8}x)) \\
-		= \forall x. ((\frac{10}{8} * \frac{8}{-2} > x) \land (\frac{-10}{8} * \frac{8}{2} < x)) \\
-		= \forall x. ((\frac{10}{-2} > x) \land (\frac{-10}{2} < x)) \\
-		= \forall x. (({20} > x) \land ({20} < x)) \\
+		= \forall x. ((\frac{-10}{8} * \frac{8}{2} < x) \land (\frac{-10}{8} * \frac{8}{2} < x)) \\
+		= \forall x. (({20} < x) \land ({20} < x)) \\
 	\end{align*}
 	We have simplified the formula to:
 	\begin{align*}
-		\forall x. (20 > x) \land (20 < x)
+		\forall x. (20 < x)
 	\end{align*}
 	Rewriting the formula as an existential formula, we get:
 	\begin{align*}
-		\neg \exists x. \neg ((20 > x) \land (20 < x))
+		\neg \exists x. \neg (20 < x)
 	\end{align*}
-	Consider the inner quantified formula:
-	\begin{align*}
-		\neg ((20 > x) \land (20 < x))
-	\end{align*}
+	
 	Defining the sub-formulae in the Ferrante-Rackoff procedure:
 	\begin{align*}
-		\psi_1 = (20 > (20 + 20) / 2) \land (20 < (20 + 20) / 2) \\
-		\psi_{-\infty} = \bot \land \top \\
-		\psi_{+\infty} = \top \land \bot
+		\psi_1 = (20 < (20 + 20) / 2) \\
+		\psi_{-\infty} = \bot \\
+		\psi_{+\infty} = \top 
 	\end{align*}
-	The final formula can be written as:
+	The final formula:
 	\begin{align*}
 		\psi' = \psi_1 \lor \psi_{-\infty} \lor \psi_{+\infty}
 	\end{align*}
-	But as we can see from above, $ \psi_{-\infty} $ and $\psi_{+\infty}$ and evaluate to $ \bot $. Hence, we can eliminate them from the formula. \\
-	Therefore, the formula can be written as:
+	Substituting, we get:
 	\begin{align*}
-		\psi' = \psi_1 
-			= (20 > (20 + 20) / 2) \land (20 < (20 + 20) / 2) \\
-			= (20 > 20) \land (20 < 20) \\
-			= \bot \land \bot \\
-			= \bot
+		\psi' = (20 < (20 + 20) / 2) \lor \bot \lor \top \\
+		= \top
 	\end{align*}
 	Bringing back the outermost negation, we get the simplified formula:
 	\begin{align*}
-		\neg \exists x. \neg ((20 > x) \land (20 < x)) = \neg (\bot) = \top
+		\neg \exists x. \neg ((20 > x) \land (20 < x)) = \neg (\top) = \bot
 	\end{align*}
-	Therefore, the given formula simplifies to $ \top $. \\
+	Therefore, the given formula simplifies to $ \bot $. \\
 
 	Task 2: \\
-	Encoding the above formula in Z3 and using the Q.E tactic:
+	Encoding the above formula in Z3:
+	\begin{python}
+from z3 import *
+
+x = Real("x")
+p = Int("p")
+q = Int("q")
+y = Real("y")
+m = Int("m")
+n = Int("n")
+s = Solver()
+
+s.add(q * x == p)
+s.add(n * y == m)
+s.add(Not(ForAll([x], Exists([y], And(2 * y > 3 * x, 4 * y < (8 * x + 10))))))
+print(s.check())
+	\end{python}
+	The output of the above code is:
+	\begin{python}
+unknown
+	\end{python}
+	Z3 is unable to determine the satisfiability of the negation of the given formula. So we cannot conclude if the given formula is valid or not. \\
 	
-	
+	However, in a different program, invoking the Q.E tactic on the given formula, yields the output $ [[False]] $. Program: \\
+	\begin{python}
+from z3 import *
 
+x = Real("x")
+p = Int("p")
+q = Int("q")
+y = Real("y")
+m = Int("m")
+n = Int("n")
+s = Solver()
 
-
-
-
-
-
-
-
+g = Goal()
+g.add(q * x == p)
+g.add(n * y == m)
+g.add(ForAll([x], Exists([y], And(2 * y > 3 * x, 4 * y < (8 * x + 10)))))
+t = Tactic("qe")
+print(t(g))
+	\end{python}
+	The output of the above code is:
+	\begin{python}
+[[False]]
+	\end{python}
 
     {\rule{17cm}{0.4pt}}
 
