@@ -369,7 +369,7 @@ print(result)
 	Let us name the vertices of the given graph as $ A, B, C, D $ where A is the topmost vertex and D is the bottommost vertex.
 	C is the vertex on the left and B is the vertex on the right. \\
 	The following vertices are connected by an edge: A and B, A and C, B and D, C and D. \\
-	Let us represent each vertex as an interval, using $ (l_{A}, u_{A}) $ to represent vertex A, and so on. \\
+	Let us represent each vertex as an interval, using $ (l_{A}, u_{A}) $ ($ l_{A} < u_{B} $) to represent vertex A, and so on. \\
 	If G is an interval graph, for two intervals $ (l_{A}, u_{A}) $ and $ (l_{B}, u_{B}) $ to be connected by an edge
 	there must exist a $ z \in \mathbb{R} $ such that $ l_{A} < z < u_{A} $ and $ l_{B} < z < u_{B} $. \\
 	Written as a formula, this is:
@@ -399,6 +399,22 @@ print(result)
 		\land \neg (\exists z_4. (l_{A} < z_4 \land z_4 < u_{A}) \land (l_{D} < z_4 \land z_4 < u_{D})) \\
 		\land \neg (\exists z_5. (l_{B} < z_5 \land z_5 < u_{B}) \land (l_{C} < z_5 \land z_5 < u_{C}))
 	\end{align*}
+
+	Performing Q.E on the first conjunct, we get:
+	\begin{align*}
+		\exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B}) \\
+		= (l_{A} < u_{A} \land l_{B} < u_{A} \land l_{A} < u_{B} \land l_{B} < u_{B})
+	\end{align*}
+	Similarly, performing Q.E on the remaining conjuncts, and combining all the results, we get:
+	\begin{align*}
+		\alpha_G = (l_{A} < u_{A} \land l_{B} < u_{A} \land l_{A} < u_{B} \land l_{B} < u_{B}) \\
+		\land (l_{A} < u_{A} \land l_{C} < u_{A} \land l_{A} < u_{C} \land l_{C} < u_{C}) \\
+		\land (l_{B} < u_{B} \land l_{D} < u_{B} \land l_{B} < u_{D} \land l_{D} < u_{D}) \\
+		\land (l_{C} < u_{C} \land l_{D} < u_{C} \land l_{C} < u_{D} \land l_{D} < u_{D}) \\
+		\land \neg (l_{A} < u_{A} \land l_{D} < u_{A} \land l_{A} < u_{D} \land l_{D} < u_{D}) \\
+		\land \neg (l_{B} < u_{B} \land l_{C} < u_{B} \land l_{B} < u_{C} \land l_{C} < u_{C})
+	\end{align*}
+	which is a quantifier free formula. \\
 	
 	Task 2: \\
 	Encoding the above formula, $\alpha_G$, in Z3:
