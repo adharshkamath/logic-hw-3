@@ -364,7 +364,7 @@ print(result)
 
 	\textbf{(b)} \\
 	Task 1: \\
-	Let us name the vertices of the given graph as $ A, B, C, D $ where A is the topmost vertex and D is the bottommost vertex. \\
+	Let us name the vertices of the given graph as $ A, B, C, D $ where A is the topmost vertex and D is the bottommost vertex.
 	C is the vertex on the left and B is the vertex on the right. \\
 	The following vertices are connected by an edge: A and B, A and C, B and D, C and D. \\
 	Let us represent each vertex as an interval, using $ (l_{A}, u_{A}) $ to represent vertex A, and so on. \\
@@ -390,7 +390,7 @@ print(result)
 	\end{align*}
 	Combining the above formulae, we get the required formula:
 	\begin{align*}
-		\exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B}) \\
+		\alpha_G = \exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B}) \\
 		\land \exists z_1. (l_{A} < z_1 \land z_1 < u_{A}) \land (l_{C} < z_1 \land z_1 < u_{C}) \\
 		\land \exists z_2. (l_{B} < z_2 \land z_2 < u_{B}) \land (l_{D} < z_2 \land z_2 < u_{D}) \\
 		\land \exists z_3. (l_{C} < z_3 \land z_3 < u_{C}) \land (l_{D} < z_3 \land z_3 < u_{D}) \\
@@ -399,7 +399,7 @@ print(result)
 	\end{align*}
 	
 	Task 2: \\
-	Encoding the above formula in Z3:
+	Encoding the above formula, $\alpha_G$, in Z3:
 	\begin{python}
 from z3 import *
 
@@ -440,6 +440,59 @@ unsat
     {\rule{17cm}{0.4pt}}
 	\question[]
 	\solutiontitle
+
+	We are given the following formula over rationals with addition and less than symbols: \\
+	\begin{align*}
+		\psi \equiv \forall x. \exists y. ((2y > 3x) \land (4y < 8x + 10))
+	\end{align*}
+	Consider the inner formula that is quantified by $ \exists y $:
+	\begin{align*}
+		(2y > 3x) \land (4y < 8x + 10)
+	\end{align*}
+	We can rewrite the above formula as:
+	\begin{align*}
+		(y > \frac{3}{2}x) \land (y < \frac{8}{4}x + \frac{10}{4})
+	\end{align*}
+	Now we can define the sub-formulae in the Ferrante-Rackoff procedure:
+	\begin{align*}
+		\psi_1 = (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4} \\
+		\psi_2 = ((\frac{3}{2}x + \frac{3}{2}x) / 2 > \frac{3}{2}x) \land ((\frac{3}{2}x + \frac{3}{2}x) / 2) < \frac{8}{4}x + \frac{10}{4} \\
+		\psi_3 = ((\frac{8}{4}x + \frac{10}{4}) + (\frac{8}{4}x + \frac{10}{4})) / 2 > \frac{3}{2}x \land ((\frac{8}{4}x + \frac{10}{4}) + (\frac{8}{4}x + \frac{10}{4})) / 2 < \frac{8}{4}x + \frac{10}{4}
+	\end{align*}
+	We also need to include the following:
+	\begin{align*}
+		\psi_{-\infty} = \bot \land \top \\
+		\psi_{+\infty} = \top \land \bot
+	\end{align*}
+	The final formula can be written as:
+	\begin{align*}
+		\psi' = \psi_1 \lor \psi_2 \lor \psi_3 \lor \psi_{-\infty} \lor \psi_{+\infty}
+	\end{align*}
+	But as we can see from above, $ \psi_{-\infty} $ and $\psi_{+\infty}$ and evaluate to $ \bot $. Hence, we can eliminate them from the formula. \\
+	Therefore, the formula can be written as:
+	\begin{align*}
+		\psi' = \psi_1 \lor \psi_2 \lor \psi_3
+		      = ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4}) \\
+				\lor ((\frac{3}{2}x + \frac{3}{2}x) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{3}{2}x) / 2 < \frac{8}{4}x + \frac{10}{4}) \\
+				\lor (((\frac{8}{4}x + \frac{10}{4}) + (\frac{8}{4}x + \frac{10}{4})) / 2 > \frac{3}{2}x \land ((\frac{8}{4}x + \frac{10}{4}) + (\frac{8}{4}x + \frac{10}{4})) / 2 < \frac{8}{4}x + \frac{10}{4})
+	\end{align*}
+	We can eliminate $ \psi_2 $ and $ \psi_3 $ since they cannot be satisfied (They contain a term of the form $ p > p $ or $ p < p $, where $ p $ is $\frac{3}{2}x$ or $\frac{8}{4}x + \frac{10}{4}$). \\ \\
+	Therefor, the formula without the $ \exists y $ quantifier can be written as:
+	\begin{align*}
+		\psi' = \psi_1
+		      = ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4})
+	\end{align*}
+	Putting the above back into the original formula, we get:
+	\begin{align*}
+		\forall x. ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4})
+	\end{align*}
+
+	Now to eliminate the universal quantifier, we can begin by rewriting the formula as:
+	\begin{align*}
+		\neg (\exists x. \neg ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4}))
+	\end{align*}
+
+
 
 
     {\rule{17cm}{0.4pt}}
