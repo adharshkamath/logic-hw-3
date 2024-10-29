@@ -487,10 +487,52 @@ unsat
 		\forall x. ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4})
 	\end{align*}
 
-	Now to eliminate the universal quantifier, we can begin by rewriting the formula as:
+	Rewriting the above to contain terms of the form $ x < c $ and $ x > c $, we get:
 	\begin{align*}
-		\neg (\exists x. \neg ((\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x \land (\frac{3}{2}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4}))
+		\forall x. ((\frac{6}{4}x + \frac{8}{4}x + \frac{10}{4}) / 2 > \frac{3}{2}x) \land ((\frac{6}{4}x + \frac{8}{4}x + \frac{10}{4}) / 2 < \frac{8}{4}x + \frac{10}{4}) \\
+		= \forall x. ((\frac{6}{8}x + \frac{8}{8}x + \frac{10}{8}) > \frac{3}{2}x) \land ((\frac{6}{8}x + \frac{8}{8}x + \frac{10}{8}) < \frac{8}{4}x + \frac{10}{4}) \\
+		= \forall x. ((\frac{10}{8} > \frac{3}{2}x - \frac{6}{8}x - \frac{8}{8}x) \land (\frac{10}{8} < \frac{8}{4}x + \frac{10}{4} - \frac{6}{8}x - \frac{8}{8}x)) \\
+		= \forall x. ((\frac{10}{8} > \frac{12}{8}x - \frac{6}{8}x - \frac{8}{8}x) \land (\frac{10}{8} < \frac{16}{8}x - \frac{6}{8}x - \frac{8}{8}x)) + \frac{10}{4} \\  
+		= \forall x. ((\frac{10}{8} > \frac{-2}{8}x) \land (\frac{10}{8} - \frac{10}{4} < \frac{2}{8}x)) \\
+		= \forall x. ((\frac{10}{8} * \frac{8}{-2} > x) \land (\frac{-10}{8} * \frac{8}{2} < x)) \\
+		= \forall x. ((\frac{10}{-2} > x) \land (\frac{-10}{2} < x)) \\
+		= \forall x. (({20} > x) \land ({20} < x)) \\
 	\end{align*}
+	We have simplified the formula to:
+	\begin{align*}
+		\forall x. (20 > x) \land (20 < x)
+	\end{align*}
+	Rewriting the formula as an existential formula, we get:
+	\begin{align*}
+		\neg \exists x. \neg ((20 > x) \land (20 < x))
+	\end{align*}
+	Consider the inner quantified formula:
+	\begin{align*}
+		\neg ((20 > x) \land (20 < x))
+	\end{align*}
+	Defining the sub-formulae in the Ferrante-Rackoff procedure:
+	\begin{align*}
+		\psi_1 = (20 > (20 + 20) / 2) \land (20 < (20 + 20) / 2) \\
+		\psi_{-\infty} = \bot \land \top \\
+		\psi_{+\infty} = \top \land \bot
+	\end{align*}
+	The final formula can be written as:
+	\begin{align*}
+		\psi' = \psi_1 \lor \psi_{-\infty} \lor \psi_{+\infty}
+	\end{align*}
+	But as we can see from above, $ \psi_{-\infty} $ and $\psi_{+\infty}$ and evaluate to $ \bot $. Hence, we can eliminate them from the formula. \\
+	Therefore, the formula can be written as:
+	\begin{align*}
+		\psi' = \psi_1 
+			= (20 > (20 + 20) / 2) \land (20 < (20 + 20) / 2) \\
+			= (20 > 20) \land (20 < 20) \\
+			= \bot \land \bot
+	\end{align*}
+
+
+
+
+
 
 
 
