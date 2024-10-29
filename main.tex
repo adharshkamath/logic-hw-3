@@ -367,7 +367,40 @@ print(result)
 	Let us name the vertices of the given graph as $ A, B, C, D $ where A is the topmost vertex and D is the bottommost vertex. \\
 	C is the vertex on the left and B is the vertex on the right. \\
 	The following vertices are connected by an edge: A and B, A and C, B and D, C and D. \\
-	Let us represent each vertex as an interval, using $ (l_{A}, u_{A}) $ to represent vertex A, and so on. \\ 
+	Let us represent each vertex as an interval, using $ (l_{A}, u_{A}) $ to represent vertex A, and so on. \\
+	If G is an interval graph, for two intervals $ (l_{A}, u_{A}) $ and $ (l_{B}, u_{B}) $ to be connected by an edge
+	there must exist a $ z \in \mathbb{R} $ such that $ l_{A} < z < u_{A} $ and $ l_{B} < z < u_{B} $. \\
+	Written as a formula, this is:
+	\begin{align*}
+		\exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B})
+	\end{align*}
+	For the given graph, the conjunction of the following formulae must be true (for it to be an interval graph):
+	\begin{align*}
+		\exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B}) \\
+		\land \exists z_1. (l_{A} < z_1 \land z_1 < u_{A}) \land (l_{C} < z_1 \land z_1 < u_{C}) \\
+		\land \exists z_2. (l_{B} < z_2 \land z_2 < u_{B}) \land (l_{D} < z_2 \land z_2 < u_{D}) \\
+		\land \exists z_3. (l_{C} < z_3 \land z_3 < u_{C}) \land (l_{D} < z_3 \land z_3 < u_{D})
+	\end{align*}
+	Each existential formula represents an edge in the graph. \\
+	We also need to ensure that if two vertices are not connected by an edge, then their intervals do not intersect. \\
+	We can state the above as:
+	\begin{align*}
+		\neg (\exists z. (l_{A} < z \land z < u_{A}) \land (l_{D} < z \land z < u_{D})) \\
+		\land \neg (\exists z. (l_{B} < z \land z < u_{B}) \land (l_{C} < z \land z < u_{C}))
+	\end{align*}
+	Combining the above formulae, we get the required formula:
+	\begin{align*}
+		\exists z. (l_{A} < z \land z < u_{A}) \land (l_{B} < z \land z < u_{B}) \\
+		\land \exists z_1. (l_{A} < z_1 \land z_1 < u_{A}) \land (l_{C} < z_1 \land z_1 < u_{C}) \\
+		\land \exists z_2. (l_{B} < z_2 \land z_2 < u_{B}) \land (l_{D} < z_2 \land z_2 < u_{D}) \\
+		\land \exists z_3. (l_{C} < z_3 \land z_3 < u_{C}) \land (l_{D} < z_3 \land z_3 < u_{D}) \\
+		\land \neg (\exists z_4. (l_{A} < z_4 \land z_4 < u_{A}) \land (l_{D} < z_4 \land z_4 < u_{D})) \\
+		\land \neg (\exists z_5. (l_{B} < z_5 \land z_5 < u_{B}) \land (l_{C} < z_5 \land z_5 < u_{C}))
+	\end{align*}
+	
+	Task 2: \\
+	Encoding the above formula in Z3:
+	% \begin{python}
 	
     {\rule{17cm}{0.4pt}}
 	\question[]
