@@ -526,8 +526,20 @@ unsat
 		\psi' = \psi_1 
 			= (20 > (20 + 20) / 2) \land (20 < (20 + 20) / 2) \\
 			= (20 > 20) \land (20 < 20) \\
-			= \bot \land \bot
+			= \bot \land \bot \\
+			= \bot
 	\end{align*}
+	Bringing back the outermost negation, we get the simplified formula:
+	\begin{align*}
+		\neg \exists x. \neg ((20 > x) \land (20 < x)) = \neg (\bot) = \top
+	\end{align*}
+	Therefore, the given formula simplifies to $ \top $. \\
+
+	Task 2: \\
+	Encoding the above formula in Z3 and using the Q.E tactic:
+	
+	
+
 
 
 
